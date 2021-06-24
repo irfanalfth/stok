@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Pendataan</title>
+    <title>Admin</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -107,12 +107,13 @@
             <div class="main-content">
                 <section class="section">
                     <?php if ($this->session->flashdata('message')) {
-                        echo $this->session->flashdata('message');
-                        $this->session->unset_userdata('message');
-                    } ?>
+                                                                                echo $this->session->flashdata('message');
+                                                                                $this->session->unset_userdata('message');
+                                                                            } ?>
                     <?php
-                    if (isset($_view) && $_view)
+                    if (isset($_view) && $_view) {
                         $this->load->view($_view);
+                    }
                     ?>
                 </section>
             </div>

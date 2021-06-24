@@ -24,9 +24,8 @@
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" />
     <!-- Template CSS -->
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">
-    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/select2.css">
     <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/components.css">
-
+    <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/select2.css">
 </head>
 
 <body>
@@ -34,12 +33,17 @@
         <div class="main-wrapper">
             <div class="navbar-bg"></div>
             <nav class="navbar navbar-expand-lg main-navbar">
-                <ul class="navbar-nav navbar-left mr-auto">
-                </ul>
+                <form class="form-inline mr-auto">
+                    <ul class="navbar-nav mr-3">
+                        <li><a href="#" data-toggle="sidebar" class="nav-link nav-link-lg"><i class="fas fa-bars"></i></a></li>
+                    </ul>
+                </form>
                 <ul class="navbar-nav navbar-right">
                     <li class="dropdown"><a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                             <img alt="image" src="<?php echo base_url(); ?>assets/img/avatar/<?= $this->session->userdata('profile'); ?>" class="rounded-circle mr-1">
-                            <div class="d-sm-none d-lg-inline-block">Hi, <?php echo $this->session->userdata('first_name').' '.$this->session->userdata('last_name');?></div>
+                            <div class="d-sm-none d-lg-inline-block">Hi, <?php
+                                                                            echo $this->session->userdata('first_name')
+                                                                            ?></div>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right">
                             <a href="<?php echo base_url('profile') ?>" class="dropdown-item has-icon">
@@ -56,21 +60,21 @@
             <div class="main-sidebar">
                 <aside id="sidebar-wrapper">
                     <div class="sidebar-brand">
-                        <img class="p-2" src="<?= base_url('assets/dds.png') ?>" width="180" alt="">
+                        ADMIN
                     </div>
                     <div class="sidebar-brand sidebar-brand-sm">
-                        <a href="index.html">DDS</a>
+                        ADMIN
                     </div>
                     <ul class="sidebar-menu">
                         <li class="menu-header">Menu</li>
                         <li class="<?php echo (empty($this->uri->segment(1)) || $this->uri->segment(1) == 'super_admin') ? 'active' : ''; ?>">
                             <a class="nav-link" href="<?php echo base_url('super_admin/index'); ?>">
-                                <i class="fas fa-fire"></i> <span>Dashboard</span>
+                                <i class="fas fa-file-alt"></i> <span>Stok Aset</span>
                             </a>
                         </li>
-                        <li class="<?php echo (empty($this->uri->segment(1)) || $this->uri->segment(1) == 'company') ? 'active' : ''; ?>">
-                            <a class="nav-link" href="<?php echo base_url('company/index'); ?>">
-                                <i class="fas fa-building"></i> <span>Data Perusahaan</span>
+                        <li class="<?php echo ($this->uri->segment(2) == 'non_aset') ? 'active' : ''; ?>">
+                            <a class="nav-link" href="<?php echo base_url('super_admin/non_aset'); ?>">
+                                <i class="far fa-file-alt"></i> <span>Stok Non Aset</span>
                             </a>
                         </li>
                     </ul>
@@ -81,11 +85,13 @@
             <div class="main-content">
                 <section class="section">
                     <?php if ($this->session->flashdata('message')) {
-                        echo $this->session->flashdata('message');
-                    } ?>
+                                                                                echo $this->session->flashdata('message');
+                                                                                $this->session->unset_userdata('message');
+                                                                            } ?>
                     <?php
-                    if (isset($_view) && $_view)
+                    if (isset($_view) && $_view) {
                         $this->load->view($_view);
+                    }
                     ?>
                 </section>
             </div>
@@ -111,12 +117,104 @@
         $(document).ready(function() {
             $('#myTable').DataTable();
         });
+        $('#isWaranty').change(() => {
+            let check = $('#isWaranty').is(':checked')
+            if (check) {
+                $('#formWaranty').attr('hidden', false)
+            } else {
+                $('#formWaranty').attr('hidden', true)
+            }
+        })
+        $('#kendaraan').change(() => {
+            let check = $('#kendaraan').is(':checked')
+            if (check) {
+                $('#formKendaraan').attr('hidden', false)
+            } else {
+                $('#formKendaraan').attr('hidden', true)
+            }
+        })
+        $('#isNomor').change(() => {
+            let check = $('#isNomor').is(':checked')
+            if (check) {
+                $('#formInputNomor').attr('hidden', false)
+            } else {
+                $('#formInputNomor').attr('hidden', true)
+            }
+        })
+        $('#tambahNomor').click(() => {
+            let html = $('#formTambahanNomor').html()
+            let ke = $('.formTambahNomor').last().attr('id').split('-')
+            let rowke = ke[1]
+            $('#formTambahNomor-' + rowke).after('<div id="formTambahNomor-' + (parseInt(rowke) + 1) + '" class="col-md-12 formTambahNomor"><div class="row"> <div class="col-md-5"> <label for="nama" class="control-label">Nama Nomor</label> <div class="form-group"> <input type="text" name="nama[]" class="form-control" id="nama" /> <span class="text-danger"><?php echo form_error('nama'); ?></span> </div> </div> <div class="col-md-5"> <label for="nomor" class="control-label">Nomor</label> <div class="form-group"> <input type="text" name="nomor[]" class="form-control" id="nomor" /> <span class="text-danger"><?php echo form_error('nomor'); ?></span> </div> </div> <div class="col-md-2 d-flex align-items-center"> <button type="button"  onclick="hapusNomor(' + (parseInt(rowke) + 1) + ')"  class=" btn btn-sm btn-rounded btn-danger hapus-nomor" ">Hapus Nomor</button> </div> </div></div>')
+        })
+
+        function hapusNomor(id) {
+            $("#formTambahNomor-" + id).remove();
+            let ka = ['l', '']
+        }
+
+        function confirmDeleteNomor(id) {
+            var x = confirm("Are you sure you want to delete?");
+            if (x) {
+                hapusNomor(id)
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        $('#gedung').change(function() {
+            let a = $(this).val()
+            console.log(a);
+            $.ajax({
+                type: "POST",
+                data: {
+                    gedung: a
+                },
+                url: "<?= base_url('kartu_stok_aset/getruang') ?>",
+                success: function(data) {
+                    $('#ruang').html(data);
+                }
+            });
+        })
+        $('.cetak').click(function() {
+            let a = $(this).data('id');
+            console.log(a);
+            $.ajax({
+                type: "POST",
+                data: {
+                    inv: a
+                },
+                url: "<?= base_url('kartu_stok_aset/getqrcode') ?>",
+                // beforeSend: function() {
+                //     alert('sabar');
+                // },
+                success: function(data) {
+                    window.open('rawbt:' + data)
+                }
+
+            });
+        })
     </script>
     <!-- Template JS File -->
     <script src="<?php echo base_url(); ?>assets/js/scripts.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/custom.js"></script>
     <script src="<?php echo base_url(); ?>assets/js/select2.js"></script>
-    <script src="<?php echo base_url(); ?>assets/js/advance-form.js"></script>
+    <script src="<?php echo base_url(); ?>assets/dist/cleave.min.js"></script>
+    <script>
+        var cleaveC = new Cleave('.currency', {
+            numeral: true,
+            numeralThousandsGroupStyle: 'thousand'
+        });
+        var cleaveC = new Cleave('.number', {
+            numeral: true,
+        });
+
+        $('.popover-dismiss').popover({
+            trigger: 'focus'
+        })
+    </script>
+
 
 </body>
 
